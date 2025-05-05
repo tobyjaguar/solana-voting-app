@@ -1,1 +1,110 @@
-@import 'tailwindcss';
+@import "tailwindcss/preflight";
+@tailwind utilities;
+
+:root {
+  --solana-purple: #9945FF;
+  --solana-green: #14F195;
+  --solana-blue: #00C2FF;
+  --background-color: #0d1117;
+  --card-background: #1e1e24;
+  --text-color: #ffffff;
+}
+
+body {
+  color: var(--text-color);
+  background: var(--background-color);
+}
+
+.wallet-adapter-button {
+  background-color: var(--solana-purple) !important;
+}
+
+.wallet-adapter-button:hover {
+  background-color: #8838e0 !important;
+}
+
+.wallet-adapter-modal-wrapper {
+  background-color: var(--card-background) !important;
+}
+
+/* Add utility classes for Tailwind v4 */
+@layer utilities {
+  .bg-slate-700 {
+    background-color: #334155;
+  }
+  .bg-slate-800 {
+    background-color: #1e293b;
+  }
+  .bg-slate-900 {
+    background-color: #0f172a;
+  }
+  .text-slate-300 {
+    color: #cbd5e1;
+  }
+  .text-slate-400 {
+    color: #94a3b8;
+  }
+  .border-slate-600 {
+    border-color: #475569;
+  }
+  .border-slate-700 {
+    border-color: #334155;
+  }
+  .bg-purple-600 {
+    background-color: #9333ea;
+  }
+  .bg-purple-700 {
+    background-color: #7e22ce;
+  }
+  .bg-blue-600 {
+    background-color: #2563eb;
+  }
+  .bg-blue-700 {
+    background-color: #1d4ed8;
+  }
+  .bg-green-600 {
+    background-color: #16a34a;
+  }
+  .bg-green-700 {
+    background-color: #15803d;
+  }
+  .bg-red-500 {
+    background-color: #ef4444;
+  }
+  .bg-green-900\/30 {
+    background-color: rgba(20, 83, 45, 0.3);
+  }
+  .bg-red-900\/30 {
+    background-color: rgba(127, 29, 29, 0.3);
+  }
+  .text-green-300 {
+    color: #86efac;
+  }
+  .text-red-300 {
+    color: #fca5a5;
+  }
+  .from-purple-400 {
+    --tw-gradient-from: #c084fc;
+  }
+  .from-purple-600 {
+    --tw-gradient-from: #9333ea;
+  }
+  .from-purple-700 {
+    --tw-gradient-from: #7e22ce;
+  }
+  .to-blue-500 {
+    --tw-gradient-to: #3b82f6;
+  }
+  .to-blue-600 {
+    --tw-gradient-to: #2563eb;
+  }
+  .to-blue-700 {
+    --tw-gradient-to: #1d4ed8;
+  }
+  .border-green-500 {
+    border-color: #22c55e;
+  }
+  .border-red-500 {
+    border-color: #ef4444;
+  }
+}

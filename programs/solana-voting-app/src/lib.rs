@@ -119,7 +119,7 @@ pub struct Candidate {
 #[derive(Accounts)]
 #[instruction(poll_id: u64, candidate_name: String)]
 pub struct Vote<'info> {
-    #[account()]
+    #[account(mut)]
     pub signer: Signer<'info>,
 
     #[account(
@@ -134,7 +134,21 @@ pub struct Vote<'info> {
         bump,
     )]
     pub candidate: Account<'info, Candidate>,
+
+    #[account(
+        init_if_needed,
+        payer = signer,
+        space = 8,
+        seeds = [poll_id.to_le_bytes().as_ref(), candidate_name.as_bytes(), signer.key().as_ref()],
+        bump,
+    )]
+    pub voter_record: Account<'info, VoterRecord>,
+
+    pub system_program: Program<'info, System>,
 }
+
+#[account]
+pub struct VoterRecord {}
 
 #[error_code]
 pub enum VotingError {
