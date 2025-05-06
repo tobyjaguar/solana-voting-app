@@ -47,11 +47,6 @@ const getVoterRecordPDA = (pollId, candidateName, voterPubkey)=>{
     return pda;
 };
 }}),
-"[project]/target/idl/solana_voting_app.json (json)": ((__turbopack_context__) => {
-
-var { g: global, __dirname } = __turbopack_context__;
-{
-__turbopack_context__.v(JSON.parse("{\"address\":\"C82ywxcsy6SahTq2CvdnGsN4xN1aKeWan7VR3mDQgi8V\",\"metadata\":{\"name\":\"solana_voting_app\",\"version\":\"0.1.0\",\"spec\":\"0.1.0\",\"description\":\"Created with Anchor\"},\"instructions\":[{\"name\":\"initialize_candidate\",\"discriminator\":[210,107,118,204,255,97,112,26],\"accounts\":[{\"name\":\"signer\",\"writable\":true,\"signer\":true},{\"name\":\"poll\",\"pda\":{\"seeds\":[{\"kind\":\"arg\",\"path\":\"poll_id\"}]}},{\"name\":\"candidate\",\"writable\":true,\"pda\":{\"seeds\":[{\"kind\":\"arg\",\"path\":\"poll_id\"},{\"kind\":\"arg\",\"path\":\"candidate_name\"}]}},{\"name\":\"system_program\",\"address\":\"11111111111111111111111111111111\"}],\"args\":[{\"name\":\"_poll_id\",\"type\":\"u64\"},{\"name\":\"candidate_name\",\"type\":\"string\"}]},{\"name\":\"initialize_poll\",\"discriminator\":[193,22,99,197,18,33,115,117],\"accounts\":[{\"name\":\"signer\",\"writable\":true,\"signer\":true},{\"name\":\"poll\",\"writable\":true,\"pda\":{\"seeds\":[{\"kind\":\"arg\",\"path\":\"poll_id\"}]}},{\"name\":\"system_program\",\"address\":\"11111111111111111111111111111111\"}],\"args\":[{\"name\":\"poll_id\",\"type\":\"u64\"},{\"name\":\"description\",\"type\":\"string\"},{\"name\":\"poll_start_time\",\"type\":\"u64\"},{\"name\":\"poll_end_time\",\"type\":\"u64\"}]},{\"name\":\"vote\",\"discriminator\":[227,110,155,23,136,126,172,25],\"accounts\":[{\"name\":\"signer\",\"writable\":true,\"signer\":true},{\"name\":\"poll\",\"pda\":{\"seeds\":[{\"kind\":\"arg\",\"path\":\"poll_id\"}]}},{\"name\":\"candidate\",\"writable\":true,\"pda\":{\"seeds\":[{\"kind\":\"arg\",\"path\":\"poll_id\"},{\"kind\":\"arg\",\"path\":\"candidate_name\"}]}},{\"name\":\"voter_record\",\"writable\":true,\"pda\":{\"seeds\":[{\"kind\":\"arg\",\"path\":\"poll_id\"},{\"kind\":\"arg\",\"path\":\"candidate_name\"},{\"kind\":\"account\",\"path\":\"signer\"}]}},{\"name\":\"system_program\",\"address\":\"11111111111111111111111111111111\"}],\"args\":[{\"name\":\"_poll_id\",\"type\":\"u64\"},{\"name\":\"_candidate_name\",\"type\":\"string\"}]}],\"accounts\":[{\"name\":\"Candidate\",\"discriminator\":[86,69,250,96,193,10,222,123]},{\"name\":\"Poll\",\"discriminator\":[110,234,167,188,231,136,153,111]},{\"name\":\"VoterRecord\",\"discriminator\":[178,96,138,116,143,202,115,33]}],\"errors\":[{\"code\":6000,\"name\":\"PollNotStarted\",\"msg\":\"Poll has not started yet\"},{\"code\":6001,\"name\":\"PollEnded\",\"msg\":\"Poll has already ended\"}],\"types\":[{\"name\":\"Candidate\",\"type\":{\"kind\":\"struct\",\"fields\":[{\"name\":\"candidate_name\",\"type\":\"string\"},{\"name\":\"candidate_votes\",\"type\":\"u64\"}]}},{\"name\":\"Poll\",\"type\":{\"kind\":\"struct\",\"fields\":[{\"name\":\"poll_id\",\"type\":\"u64\"},{\"name\":\"description\",\"type\":\"string\"},{\"name\":\"poll_start_time\",\"type\":\"u64\"},{\"name\":\"poll_end_time\",\"type\":\"u64\"},{\"name\":\"candidate_amount\",\"type\":\"u64\"}]}},{\"name\":\"VoterRecord\",\"type\":{\"kind\":\"struct\",\"fields\":[]}}]}"));}}),
 "[project]/app/hooks/useVotingProgram.ts [app-ssr] (ecmascript)": ((__turbopack_context__) => {
 "use strict";
 
@@ -65,17 +60,14 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$solana$2f$wallet$2d$adapter$2d$react$2f$lib$2f$esm$2f$useAnchorWallet$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/@solana/wallet-adapter-react/lib/esm/useAnchorWallet.js [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$solana$2f$wallet$2d$adapter$2d$react$2f$lib$2f$esm$2f$useConnection$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/@solana/wallet-adapter-react/lib/esm/useConnection.js [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$solana$2f$wallet$2d$adapter$2d$react$2f$lib$2f$esm$2f$useWallet$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/@solana/wallet-adapter-react/lib/esm/useWallet.js [app-ssr] (ecmascript)");
-var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$coral$2d$xyz$2f$anchor$2f$dist$2f$esm$2f$index$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$module__evaluation$3e$__ = __turbopack_context__.i("[project]/node_modules/@coral-xyz/anchor/dist/esm/index.js [app-ssr] (ecmascript) <module evaluation>");
-var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$coral$2d$xyz$2f$anchor$2f$dist$2f$esm$2f$program$2f$index$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$locals$3e$__ = __turbopack_context__.i("[project]/node_modules/@coral-xyz/anchor/dist/esm/program/index.js [app-ssr] (ecmascript) <locals>");
-var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$coral$2d$xyz$2f$anchor$2f$dist$2f$esm$2f$provider$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/@coral-xyz/anchor/dist/esm/provider.js [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$project$2d$serum$2f$anchor$2f$dist$2f$esm$2f$index$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$module__evaluation$3e$__ = __turbopack_context__.i("[project]/node_modules/@project-serum/anchor/dist/esm/index.js [app-ssr] (ecmascript) <module evaluation>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$project$2d$serum$2f$anchor$2f$dist$2f$esm$2f$program$2f$index$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$locals$3e$__ = __turbopack_context__.i("[project]/node_modules/@project-serum/anchor/dist/esm/program/index.js [app-ssr] (ecmascript) <locals>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$project$2d$serum$2f$anchor$2f$dist$2f$esm$2f$provider$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/@project-serum/anchor/dist/esm/provider.js [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$bn$2e$js$2f$lib$2f$bn$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__BN$3e$__ = __turbopack_context__.i("[project]/node_modules/bn.js/lib/bn.js [app-ssr] (ecmascript) <export default as BN>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$solana$2f$web3$2e$js$2f$lib$2f$index$2e$esm$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/@solana/web3.js/lib/index.esm.js [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$utils$2f$constants$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/app/utils/constants.ts [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$utils$2f$pdas$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/app/utils/pdas.ts [app-ssr] (ecmascript)");
-// Import the IDL directly
-var __TURBOPACK__imported__module__$5b$project$5d2f$target$2f$idl$2f$solana_voting_app$2e$json__$28$json$29$__ = __turbopack_context__.i("[project]/target/idl/solana_voting_app.json (json)");
 'use client';
-;
 ;
 ;
 ;
@@ -150,7 +142,7 @@ const useVotingProgram = ()=>{
                 console.log("Initializing program with wallet:", wallet.publicKey.toString());
                 console.log("Program ID:", __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$utils$2f$constants$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["PROGRAM_ID"].toString());
                 // Create provider with more lenient settings for local development
-                const provider = new __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$coral$2d$xyz$2f$anchor$2f$dist$2f$esm$2f$provider$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["AnchorProvider"](connection, wallet, {
+                const provider = new __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$project$2d$serum$2f$anchor$2f$dist$2f$esm$2f$provider$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["AnchorProvider"](connection, wallet, {
                     commitment: 'processed',
                     preflightCommitment: 'processed',
                     skipPreflight: true
@@ -159,9 +151,8 @@ const useVotingProgram = ()=>{
                 console.log("Connection endpoint:", connection.rpcEndpoint);
                 console.log("Wallet public key:", wallet.publicKey.toString());
                 try {
-                    const programInstance = new __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$coral$2d$xyz$2f$anchor$2f$dist$2f$esm$2f$program$2f$index$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$locals$3e$__["Program"](__TURBOPACK__imported__module__$5b$project$5d2f$target$2f$idl$2f$solana_voting_app$2e$json__$28$json$29$__["default"], provider);
+                    const programInstance = new __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$project$2d$serum$2f$anchor$2f$dist$2f$esm$2f$program$2f$index$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$locals$3e$__["Program"](idl, __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$utils$2f$constants$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["PROGRAM_ID"], provider);
                     // Log available methods to verify structure
-                    console.log("Available accounts:", Object.keys(programInstance.account));
                     console.log("Available methods:", Object.keys(programInstance.methods));
                     console.log("Program initialized successfully");
                     setProgram(programInstance);
@@ -194,14 +185,7 @@ const useVotingProgram = ()=>{
         setStatus(null);
         try {
             // Fetch all poll accounts
-            console.log("Fetching all poll accounts...");
-            console.log('Available accounts:', Object.keys(program.account));
-            // First check if the account name is capitalized (Poll) or lowercase (poll)
-            const pollAccountName = Object.keys(program.account).find((name)=>name.toLowerCase() === 'poll');
-            if (!pollAccountName) {
-                throw new Error("Poll account not found in program");
-            }
-            const pollAccounts = await program.account[pollAccountName].all();
+            const pollAccounts = await program.account.poll.all();
             console.log("Raw poll accounts:", pollAccounts);
             // Transform the data
             return pollAccounts.map((item)=>{
@@ -209,11 +193,11 @@ const useVotingProgram = ()=>{
                 return {
                     publicKey: item.publicKey,
                     account: {
-                        pollId: new __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$bn$2e$js$2f$lib$2f$bn$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__BN$3e$__["BN"](account.poll_id?.toString() || account.pollId?.toString() || '0'),
+                        pollId: new __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$bn$2e$js$2f$lib$2f$bn$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__BN$3e$__["BN"](account.poll_id?.toString() || '0'),
                         description: account.description || '',
-                        pollStartTime: new __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$bn$2e$js$2f$lib$2f$bn$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__BN$3e$__["BN"](account.poll_start_time?.toString() || account.pollStartTime?.toString() || '0'),
-                        pollEndTime: new __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$bn$2e$js$2f$lib$2f$bn$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__BN$3e$__["BN"](account.poll_end_time?.toString() || account.pollEndTime?.toString() || '0'),
-                        candidateAmount: account.candidate_amount || account.candidateAmount || 0
+                        pollStartTime: new __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$bn$2e$js$2f$lib$2f$bn$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__BN$3e$__["BN"](account.poll_start_time?.toString() || '0'),
+                        pollEndTime: new __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$bn$2e$js$2f$lib$2f$bn$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__BN$3e$__["BN"](account.poll_end_time?.toString() || '0'),
+                        candidateAmount: account.candidate_amount || 0
                     }
                 };
             });
@@ -235,14 +219,7 @@ const useVotingProgram = ()=>{
         setStatus(null);
         try {
             // Fetch all candidates
-            console.log("Fetching all candidates...");
-            console.log('Available accounts:', Object.keys(program.account));
-            // First check if the account name is capitalized (Candidate) or lowercase (candidate)
-            const candidateAccountName = Object.keys(program.account).find((name)=>name.toLowerCase() === 'candidate');
-            if (!candidateAccountName) {
-                throw new Error("Candidate account not found in program");
-            }
-            const allCandidates = await program.account[candidateAccountName].all();
+            const allCandidates = await program.account.candidate.all();
             console.log("Raw candidate accounts:", allCandidates);
             // Transform the candidates
             return allCandidates.map((item)=>{
@@ -250,8 +227,8 @@ const useVotingProgram = ()=>{
                 return {
                     publicKey: item.publicKey,
                     account: {
-                        candidateName: account.candidate_name || account.candidateName || '',
-                        candidateVotes: new __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$bn$2e$js$2f$lib$2f$bn$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__BN$3e$__["BN"](account.candidate_votes?.toString() || account.candidateVotes?.toString() || '0')
+                        candidateName: account.candidate_name || '',
+                        candidateVotes: new __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$bn$2e$js$2f$lib$2f$bn$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__BN$3e$__["BN"](account.candidate_votes?.toString() || '0')
                     }
                 };
             });
@@ -302,18 +279,9 @@ const useVotingProgram = ()=>{
                 startTime: now,
                 endTime: oneWeekFromNow
             });
-            // Check available method names
-            const availableMethods = Object.keys(program.methods);
-            console.log("Available methods:", availableMethods);
-            // Determine the correct method name (snake_case or camelCase)
-            const methodName = availableMethods.find((name)=>name === 'initialize_poll' || name === 'initializePoll');
-            if (!methodName) {
-                throw new Error("Initialize poll method not found in program");
-            }
-            console.log(`Using method: ${methodName}`);
             // First, simulate the transaction to get detailed error information
             try {
-                const simulation = await program.methods[methodName](pollId, description, new __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$bn$2e$js$2f$lib$2f$bn$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__BN$3e$__["BN"](now), new __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$bn$2e$js$2f$lib$2f$bn$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__BN$3e$__["BN"](oneWeekFromNow)).accounts({
+                const simulation = await program.methods.initialize_poll(pollId, description, new __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$bn$2e$js$2f$lib$2f$bn$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__BN$3e$__["BN"](now), new __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$bn$2e$js$2f$lib$2f$bn$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__BN$3e$__["BN"](oneWeekFromNow)).accounts({
                     signer: wallet.publicKey,
                     poll: pollPDA,
                     system_program: __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$solana$2f$web3$2e$js$2f$lib$2f$index$2e$esm$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["SystemProgram"].programId
@@ -323,8 +291,8 @@ const useVotingProgram = ()=>{
                 console.error("Simulation error:", simErr);
             // Log but continue to try the actual transaction
             }
-            // Use the correct method name for the actual transaction
-            const tx = await program.methods[methodName](pollId, description, new __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$bn$2e$js$2f$lib$2f$bn$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__BN$3e$__["BN"](now), new __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$bn$2e$js$2f$lib$2f$bn$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__BN$3e$__["BN"](oneWeekFromNow)).accounts({
+            // Use the exact method name as it appears in the IDL (initialize_poll)
+            const tx = await program.methods.initialize_poll(pollId, description, new __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$bn$2e$js$2f$lib$2f$bn$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__BN$3e$__["BN"](now), new __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$bn$2e$js$2f$lib$2f$bn$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__BN$3e$__["BN"](oneWeekFromNow)).accounts({
                 signer: wallet.publicKey,
                 poll: pollPDA,
                 system_program: __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$solana$2f$web3$2e$js$2f$lib$2f$index$2e$esm$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["SystemProgram"].programId
@@ -413,16 +381,8 @@ const useVotingProgram = ()=>{
                 pollId: pollId.toString(),
                 candidateName
             });
-            // Check available method names
-            const availableMethods = Object.keys(program.methods);
-            // Determine the correct method name (snake_case or camelCase)
-            const methodName = availableMethods.find((name)=>name === 'initialize_candidate' || name === 'initializeCandidate');
-            if (!methodName) {
-                throw new Error("Initialize candidate method not found in program");
-            }
-            console.log(`Using method: ${methodName}`);
-            // Use the correct method name
-            const tx = await program.methods[methodName](pollId, candidateName).accounts({
+            // Use the exact method name as it appears in the IDL (initialize_candidate)
+            const tx = await program.methods.initialize_candidate(pollId, candidateName).accounts({
                 signer: wallet.publicKey,
                 poll: pollPDA,
                 candidate: candidatePDA,
@@ -469,7 +429,7 @@ const useVotingProgram = ()=>{
                 pollId: pollId.toString(),
                 candidateName
             });
-            // Use the vote method (should be the same in both snake_case and camelCase)
+            // Call the vote instruction with exact method name from IDL
             const tx = await program.methods.vote(pollId, candidateName).accounts({
                 signer: wallet.publicKey,
                 poll: pollPDA,
@@ -549,10 +509,10 @@ const CreatePollForm = ({ onPollCreated })=>{
         }
     };
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-        className: "bg-slate-800 p-6 rounded-lg shadow-lg mb-8",
+        className: "bg-slate-800 p-4 rounded-lg mb-6",
         children: [
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
-                className: "text-xl font-bold mb-5",
+                className: "text-xl font-bold mb-4",
                 children: "Create New Poll"
             }, void 0, false, {
                 fileName: "[project]/app/components/CreatePollForm.tsx",
@@ -563,11 +523,11 @@ const CreatePollForm = ({ onPollCreated })=>{
                 onSubmit: handleSubmit,
                 children: [
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                        className: "mb-5",
+                        className: "mb-4",
                         children: [
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
                                 htmlFor: "description",
-                                className: "block mb-2 text-slate-300",
+                                className: "block mb-2",
                                 children: "Poll Description"
                             }, void 0, false, {
                                 fileName: "[project]/app/components/CreatePollForm.tsx",
@@ -578,7 +538,7 @@ const CreatePollForm = ({ onPollCreated })=>{
                                 id: "description",
                                 value: description,
                                 onChange: (e)=>setDescription(e.target.value),
-                                className: "w-full p-3 bg-slate-700 rounded-lg border border-slate-600 focus:border-purple-500 focus:ring-2 focus:ring-purple-500 focus:outline-none transition-colors",
+                                className: "w-full p-2 bg-slate-700 rounded border border-slate-600",
                                 placeholder: "e.g., Which Solana project should we build next?",
                                 maxLength: __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$utils$2f$constants$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["MAX_DESCRIPTION_LENGTH"],
                                 rows: 3,
@@ -589,7 +549,7 @@ const CreatePollForm = ({ onPollCreated })=>{
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                className: "text-xs text-slate-400 mt-2",
+                                className: "text-xs text-slate-400 mt-1",
                                 children: [
                                     description.length,
                                     "/",
@@ -609,7 +569,7 @@ const CreatePollForm = ({ onPollCreated })=>{
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                         type: "submit",
                         disabled: loading || !description.trim(),
-                        className: "bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white py-2 px-6 rounded-lg font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-all",
+                        className: "bg-purple-600 hover:bg-purple-700 text-white py-2 px-4 rounded disabled:opacity-50",
                         children: loading ? 'Creating...' : 'Create Poll'
                     }, void 0, false, {
                         fileName: "[project]/app/components/CreatePollForm.tsx",
@@ -623,7 +583,7 @@ const CreatePollForm = ({ onPollCreated })=>{
                 columnNumber: 7
             }, this),
             status && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                className: `mt-5 p-4 rounded-lg ${status.isError ? 'bg-red-900/30 text-red-300' : 'bg-green-900/30 text-green-300'}`,
+                className: `mt-4 p-3 rounded ${status.isError ? 'bg-red-900/30 text-red-300' : 'bg-green-900/30 text-green-300'}`,
                 children: status.message
             }, void 0, false, {
                 fileName: "[project]/app/components/CreatePollForm.tsx",
@@ -921,54 +881,27 @@ const PollCard = ({ poll, onRefresh })=>{
         return new Date(timestamp.toNumber() * 1000).toLocaleString();
     };
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-        style: {
-            backgroundColor: '#1e293b',
-            padding: '24px',
-            borderRadius: '8px',
-            boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
-            borderLeft: `4px solid ${isActive ? '#22c55e' : '#ef4444'}`,
-            opacity: isActive ? 1 : 0.8
-        },
+        className: `bg-slate-800 p-4 rounded-lg ${isActive ? 'border-l-4 border-green-500' : 'border-l-4 border-red-500 opacity-80'}`,
         children: [
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
-                style: {
-                    fontSize: '1.25rem',
-                    fontWeight: 'bold',
-                    marginBottom: '12px'
-                },
+                className: "text-xl font-bold mb-2",
                 children: poll.account.description
             }, void 0, false, {
                 fileName: "[project]/app/components/PollCard.tsx",
-                lineNumber: 52,
+                lineNumber: 45,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                style: {
-                    fontSize: '0.875rem',
-                    color: '#94a3b8',
-                    marginBottom: '20px'
-                },
+                className: "text-sm text-slate-400 mb-4",
                 children: [
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                        style: {
-                            marginBottom: '4px'
-                        },
                         children: [
                             "Status: ",
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                style: {
-                                    color: isActive ? '#4ade80' : '#f87171'
-                                },
-                                children: isActive ? 'Active' : 'Inactive'
-                            }, void 0, false, {
-                                fileName: "[project]/app/components/PollCard.tsx",
-                                lineNumber: 55,
-                                columnNumber: 50
-                            }, this)
+                            isActive ? 'Active' : 'Inactive'
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/components/PollCard.tsx",
-                        lineNumber: 55,
+                        lineNumber: 48,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -980,35 +913,25 @@ const PollCard = ({ poll, onRefresh })=>{
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/components/PollCard.tsx",
-                        lineNumber: 58,
+                        lineNumber: 49,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/components/PollCard.tsx",
-                lineNumber: 54,
+                lineNumber: 47,
                 columnNumber: 7
             }, this),
             isActive && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                style: {
-                    marginBottom: '16px'
-                },
+                className: "mb-4",
                 children: [
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                         onClick: ()=>setShowAddForm(!showAddForm),
-                        style: {
-                            backgroundColor: '#2563eb',
-                            color: 'white',
-                            padding: '6px 12px',
-                            borderRadius: '8px',
-                            fontSize: '0.875rem',
-                            cursor: 'pointer',
-                            border: 'none'
-                        },
+                        className: "bg-blue-600 hover:bg-blue-700 text-white py-1.5 px-3 rounded-lg text-sm",
                         children: showAddForm ? 'Cancel' : 'Add Project Option'
                     }, void 0, false, {
                         fileName: "[project]/app/components/PollCard.tsx",
-                        lineNumber: 65,
+                        lineNumber: 56,
                         columnNumber: 11
                     }, this),
                     showAddForm && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$AddCandidateForm$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -1019,13 +942,13 @@ const PollCard = ({ poll, onRefresh })=>{
                         }
                     }, void 0, false, {
                         fileName: "[project]/app/components/PollCard.tsx",
-                        lineNumber: 81,
+                        lineNumber: 64,
                         columnNumber: 13
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/components/PollCard.tsx",
-                lineNumber: 64,
+                lineNumber: 55,
                 columnNumber: 9
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1035,7 +958,7 @@ const PollCard = ({ poll, onRefresh })=>{
                         children: "Project Options:"
                     }, void 0, false, {
                         fileName: "[project]/app/components/PollCard.tsx",
-                        lineNumber: 93,
+                        lineNumber: 76,
                         columnNumber: 9
                     }, this),
                     loading ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1043,7 +966,7 @@ const PollCard = ({ poll, onRefresh })=>{
                         children: "Loading candidates..."
                     }, void 0, false, {
                         fileName: "[project]/app/components/PollCard.tsx",
-                        lineNumber: 96,
+                        lineNumber: 79,
                         columnNumber: 11
                     }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$CandidateList$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
                         pollId: poll.account.pollId,
@@ -1055,13 +978,13 @@ const PollCard = ({ poll, onRefresh })=>{
                         }
                     }, void 0, false, {
                         fileName: "[project]/app/components/PollCard.tsx",
-                        lineNumber: 98,
+                        lineNumber: 81,
                         columnNumber: 11
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/components/PollCard.tsx",
-                lineNumber: 92,
+                lineNumber: 75,
                 columnNumber: 7
             }, this)
         ]
@@ -1101,14 +1024,6 @@ function Home() {
     const { fetchPolls, loading, status } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$hooks$2f$useVotingProgram$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"])();
     const [polls, setPolls] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])([]);
     const [showCreateForm, setShowCreateForm] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(false);
-    const [isWideScreen, setIsWideScreen] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(false);
-    // Handle responsive layout
-    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useEffect"])(()=>{
-        // Only run on client side
-        if ("TURBOPACK compile-time falsy", 0) {
-            "TURBOPACK unreachable";
-        }
-    }, []);
     // Load polls when wallet connects
     const loadPolls = async ()=>{
         if (publicKey) {
@@ -1123,70 +1038,43 @@ function Home() {
         publicKey
     ]);
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("main", {
-        style: {
-            minHeight: '100vh',
-            display: 'flex',
-            flexDirection: 'column',
-            paddingBottom: '48px',
-            color: 'white'
-        },
+        className: "flex min-h-screen flex-col py-8 bg-slate-900 text-white",
         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-            style: {
-                width: '100%',
-                maxWidth: '1200px',
-                margin: '0 auto',
-                padding: '0 20px'
-            },
+            className: "w-full max-w-5xl mx-auto",
             children: [
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("header", {
-                    style: {
-                        display: 'flex',
-                        flexDirection: isWideScreen ? 'row' : 'column',
-                        justifyContent: 'space-between',
-                        alignItems: isWideScreen ? 'center' : 'flex-start',
-                        marginBottom: '48px',
-                        paddingTop: '24px',
-                        paddingBottom: '24px',
-                        borderBottom: '1px solid rgba(255,255,255,0.1)'
-                    },
+                    className: "flex flex-col md:flex-row justify-between items-start md:items-center mb-12 pb-6 border-b border-slate-700",
                     children: [
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h1", {
-                            style: {
-                                fontSize: '2rem',
-                                fontWeight: 'bold',
-                                marginBottom: isWideScreen ? 0 : '16px',
-                                background: 'linear-gradient(90deg, #c084fc, #3b82f6)',
-                                WebkitBackgroundClip: 'text',
-                                WebkitTextFillColor: 'transparent'
-                            },
+                            className: "text-3xl md:text-4xl font-bold mb-4 md:mb-0 bg-gradient-to-r from-purple-400 to-blue-500 text-transparent bg-clip-text",
                             children: "Solana Dev Meetup Voting"
                         }, void 0, false, {
                             fileName: "[project]/app/page.tsx",
-                            lineNumber: 66,
+                            lineNumber: 35,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$solana$2f$wallet$2d$adapter$2d$react$2d$ui$2f$lib$2f$esm$2f$WalletMultiButton$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["WalletMultiButton"], {}, void 0, false, {
                             fileName: "[project]/app/page.tsx",
-                            lineNumber: 76,
+                            lineNumber: 38,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/app/page.tsx",
-                    lineNumber: 56,
+                    lineNumber: 34,
                     columnNumber: 9
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                     className: "mb-8",
                     children: publicKey ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                        className: "flex justify-between items-center p-8",
+                        className: "flex justify-between items-center",
                         children: [
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
-                                className: "text-2xl text-black font-semibold",
+                                className: "text-2xl font-semibold",
                                 children: polls.length > 0 ? 'Active Polls' : 'No Polls Found'
                             }, void 0, false, {
                                 fileName: "[project]/app/page.tsx",
-                                lineNumber: 82,
+                                lineNumber: 44,
                                 columnNumber: 15
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1195,13 +1083,13 @@ function Home() {
                                 children: showCreateForm ? 'Cancel' : 'Create New Poll'
                             }, void 0, false, {
                                 fileName: "[project]/app/page.tsx",
-                                lineNumber: 85,
+                                lineNumber: 47,
                                 columnNumber: 15
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/page.tsx",
-                        lineNumber: 81,
+                        lineNumber: 43,
                         columnNumber: 13
                     }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                         className: "bg-slate-800 py-12 rounded-lg flex flex-col items-center",
@@ -1211,7 +1099,7 @@ function Home() {
                                 children: "Welcome to Solana Dev Meetup Voting"
                             }, void 0, false, {
                                 fileName: "[project]/app/page.tsx",
-                                lineNumber: 94,
+                                lineNumber: 56,
                                 columnNumber: 15
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1219,23 +1107,23 @@ function Home() {
                                 children: "Connect your wallet to create polls and vote on project ideas for your next Solana dev meetup"
                             }, void 0, false, {
                                 fileName: "[project]/app/page.tsx",
-                                lineNumber: 95,
+                                lineNumber: 57,
                                 columnNumber: 15
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$solana$2f$wallet$2d$adapter$2d$react$2d$ui$2f$lib$2f$esm$2f$WalletMultiButton$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["WalletMultiButton"], {}, void 0, false, {
                                 fileName: "[project]/app/page.tsx",
-                                lineNumber: 98,
+                                lineNumber: 60,
                                 columnNumber: 15
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/page.tsx",
-                        lineNumber: 93,
+                        lineNumber: 55,
                         columnNumber: 13
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/app/page.tsx",
-                    lineNumber: 79,
+                    lineNumber: 41,
                     columnNumber: 9
                 }, this),
                 status && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1243,7 +1131,7 @@ function Home() {
                     children: status.message
                 }, void 0, false, {
                     fileName: "[project]/app/page.tsx",
-                    lineNumber: 105,
+                    lineNumber: 67,
                     columnNumber: 11
                 }, this),
                 showCreateForm && publicKey && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1255,113 +1143,52 @@ function Home() {
                         }
                     }, void 0, false, {
                         fileName: "[project]/app/page.tsx",
-                        lineNumber: 113,
+                        lineNumber: 75,
                         columnNumber: 13
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/app/page.tsx",
-                    lineNumber: 112,
+                    lineNumber: 74,
                     columnNumber: 11
                 }, this),
                 publicKey && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                    style: {
-                        display: 'grid',
-                        gridTemplateColumns: isWideScreen ? '1fr 1fr' : '1fr',
-                        gap: '32px'
-                    },
+                    className: "grid grid-cols-1 md:grid-cols-2 gap-6",
                     children: loading && polls.length === 0 ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                        style: {
-                            gridColumn: '1 / -1',
-                            textAlign: 'center',
-                            padding: '48px 0',
-                            color: '#94a3b8'
-                        },
-                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                            style: {
-                                animation: 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite'
-                            },
-                            children: "Loading polls..."
-                        }, void 0, false, {
-                            fileName: "[project]/app/page.tsx",
-                            lineNumber: 129,
-                            columnNumber: 17
-                        }, this)
+                        className: "col-span-full text-center py-8 text-slate-400",
+                        children: "Loading polls..."
                     }, void 0, false, {
                         fileName: "[project]/app/page.tsx",
-                        lineNumber: 128,
+                        lineNumber: 86,
                         columnNumber: 15
                     }, this) : polls.length > 0 ? polls.map((poll)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$PollCard$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
                             poll: poll,
                             onRefresh: loadPolls
                         }, poll.publicKey.toString(), false, {
                             fileName: "[project]/app/page.tsx",
-                            lineNumber: 133,
+                            lineNumber: 91,
                             columnNumber: 17
                         }, this)) : !loading && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                        style: {
-                            gridColumn: '1 / -1',
-                            textAlign: 'center',
-                            padding: '48px 0',
-                            backgroundColor: 'rgba(30, 41, 59, 0.5)',
-                            borderRadius: '8px'
-                        },
-                        children: [
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                style: {
-                                    color: '#94a3b8',
-                                    marginBottom: '16px'
-                                },
-                                children: "No polls found. Create one to get started!"
-                            }, void 0, false, {
-                                fileName: "[project]/app/page.tsx",
-                                lineNumber: 147,
-                                columnNumber: 17
-                            }, this),
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("svg", {
-                                style: {
-                                    margin: '0 auto',
-                                    height: '64px',
-                                    width: '64px',
-                                    color: '#64748b'
-                                },
-                                fill: "none",
-                                viewBox: "0 0 24 24",
-                                stroke: "currentColor",
-                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
-                                    strokeLinecap: "round",
-                                    strokeLinejoin: "round",
-                                    strokeWidth: 1,
-                                    d: "M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
-                                }, void 0, false, {
-                                    fileName: "[project]/app/page.tsx",
-                                    lineNumber: 149,
-                                    columnNumber: 19
-                                }, this)
-                            }, void 0, false, {
-                                fileName: "[project]/app/page.tsx",
-                                lineNumber: 148,
-                                columnNumber: 17
-                            }, this)
-                        ]
-                    }, void 0, true, {
+                        className: "col-span-full text-center py-8 text-slate-400",
+                        children: "No polls found. Create one to get started!"
+                    }, void 0, false, {
                         fileName: "[project]/app/page.tsx",
-                        lineNumber: 140,
+                        lineNumber: 98,
                         columnNumber: 15
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/app/page.tsx",
-                    lineNumber: 122,
+                    lineNumber: 84,
                     columnNumber: 11
                 }, this)
             ]
         }, void 0, true, {
             fileName: "[project]/app/page.tsx",
-            lineNumber: 55,
+            lineNumber: 33,
             columnNumber: 7
         }, this)
     }, void 0, false, {
         fileName: "[project]/app/page.tsx",
-        lineNumber: 54,
+        lineNumber: 32,
         columnNumber: 5
     }, this);
 }
@@ -1369,4 +1196,4 @@ function Home() {
 
 };
 
-//# sourceMappingURL=%5Broot-of-the-server%5D__b0424241._.js.map
+//# sourceMappingURL=%5Broot-of-the-server%5D__acacdc1f._.js.map

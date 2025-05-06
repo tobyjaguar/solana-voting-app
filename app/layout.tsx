@@ -18,9 +18,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={`${inter.className} bg-slate-900`}>
         <ClientWalletProvider>
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div style={{maxWidth: '1200px', margin: '0 auto', padding: '20px'}}>
             {children}
           </div>
         </ClientWalletProvider>

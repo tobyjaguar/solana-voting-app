@@ -2,72 +2,21 @@
 
 import { useEffect, useState } from 'react';
 import { useAnchorWallet, useConnection, useWallet } from '@solana/wallet-adapter-react';
-import { Program, AnchorProvider, BN, Idl } from '@project-serum/anchor';
+import { Program, AnchorProvider, BN, Idl } from '@coral-xyz/anchor';
 import { SystemProgram } from '@solana/web3.js';
 import { PollAccount, CandidateAccount, StatusMessage } from '@/app/models/types';
 import { PROGRAM_ID, NETWORK, ENDPOINT } from '@/app/utils/constants';
 import { getPollPDA, getCandidatePDA, getVoterRecordPDA } from '@/app/utils/pdas';
 
-// Import the IDL - adjust the path as needed
+// Import the IDL directly
 import idlFile from '../../target/idl/solana_voting_app.json';
-
-// Function to adapt the IDL to the format Anchor expects
-const adaptIdl = (rawIdl: any): Idl => {
-  // Create a basic Idl structure that Anchor can work with
-  const adaptedIdl: Idl = {
-    version: rawIdl.metadata?.version || "0.1.0",
-    name: rawIdl.metadata?.name || "solana_voting_app",
-    instructions: rawIdl.instructions || [],
-    accounts: [],
-    types: []
-  };
-
-  // Process accounts
-  if (rawIdl.accounts) {
-    adaptedIdl.accounts = rawIdl.accounts.map((account: any) => {
-      return {
-        name: account.name,
-        type: {
-          kind: "struct",
-          fields: []
-        }
-      };
-    });
-  }
-
-  // Process types if they exist
-  if (rawIdl.types) {
-    adaptedIdl.types = rawIdl.types.map((type: any) => {
-      // If the type already has a proper structure, use it
-      if (type.type?.kind === "struct" && type.type?.fields) {
-        return type;
-      }
-
-      // Otherwise create a minimal type definition
-      return {
-        name: type.name,
-        type: {
-          kind: "struct",
-          fields: []
-        }
-      };
-    });
-  }
-
-  // Add errors if they exist
-  if (rawIdl.errors) {
-    adaptedIdl.errors = rawIdl.errors;
-  }
-
-  return adaptedIdl;
-};
 
 export const useVotingProgram = () => {
   const { connection } = useConnection();
   const { publicKey, connected } = useWallet();
   const wallet = useAnchorWallet();
 
-  const [program, setProgram] = useState<Program | null>(null);
+  const [program, setProgram] = useState<Program<Idl> | null>(null);
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState<StatusMessage | null>(null);
   const [networkMismatch, setNetworkMismatch] = useState(false);
@@ -87,16 +36,31 @@ export const useVotingProgram = () => {
         console.log(`Expected network: ${NETWORK}, endpoint: ${ENDPOINT}`);
 
         try {
-          await connection.getLatestBlockhash();
+          // Check if the Solana validator is running
+          const blockHash = await connection.getLatestBlockhash();
           console.log("Successfully connected to Solana network");
+          console.log("Latest blockhash:", blockHash.blockhash);
+          
+          // Additional check to verify validator responsiveness
+          const balance = await connection.getBalance(publicKey);
+          console.log("Wallet balance:", balance / 1000000000, "SOL");
+          
           setNetworkMismatch(false);
         } catch (err) {
           console.error("Network connection error:", err);
           setNetworkMismatch(true);
-          setStatus({
-            message: `Connection to ${NETWORK} failed. Please check your wallet and network settings.`,
-            isError: true
-          });
+          
+          if (NETWORK === 'localnet') {
+            setStatus({
+              message: `Connection to ${NETWORK} failed. Make sure your local Solana validator is running with "solana-test-validator".`,
+              isError: true
+            });
+          } else {
+            setStatus({
+              message: `Connection to ${NETWORK} failed. Please check your wallet and network settings.`,
+              isError: true
+            });
+          }
         }
       } catch (err) {
         console.error("Network check error:", err);
@@ -120,28 +84,31 @@ export const useVotingProgram = () => {
         console.log("Initializing program with wallet:", wallet.publicKey.toString());
         console.log("Program ID:", PROGRAM_ID.toString());
 
-        // Create provider
+        // Create provider with more lenient settings for local development
         const provider = new AnchorProvider(
           connection,
           wallet,
           {
-            commitment: 'confirmed',
-            preflightCommitment: 'confirmed',
-            skipPreflight: false
+            commitment: 'processed',
+            preflightCommitment: 'processed',
+            skipPreflight: true
           }
         );
+        
+        // Log connection and wallet info for debugging
+        console.log("Connection endpoint:", connection.rpcEndpoint);
+        console.log("Wallet public key:", wallet.publicKey.toString());
 
         try {
-          // Adapt the IDL to the format Anchor expects
-          console.log("Adapting IDL to Anchor format");
-          const adaptedIdl = adaptIdl(idlFile);
-
           const programInstance = new Program(
-            adaptedIdl,
-            PROGRAM_ID,
+            idlFile as Idl,
             provider
           );
 
+          // Log available methods to verify structure
+          console.log("Available accounts:", Object.keys(programInstance.account));
+          console.log("Available methods:", Object.keys(programInstance.methods));
+          
           console.log("Program initialized successfully");
           setProgram(programInstance);
           setStatus({
@@ -173,7 +140,19 @@ export const useVotingProgram = () => {
 
     try {
       // Fetch all poll accounts
-      const pollAccounts = await program.account.poll.all();
+      console.log("Fetching all poll accounts...");
+      console.log('Available accounts:', Object.keys(program.account));
+      
+      // First check if the account name is capitalized (Poll) or lowercase (poll)
+      const pollAccountName = Object.keys(program.account).find(
+        name => name.toLowerCase() === 'poll'
+      );
+      
+      if (!pollAccountName) {
+        throw new Error("Poll account not found in program");
+      }
+      
+      const pollAccounts = await program.account[pollAccountName].all();
       console.log("Raw poll accounts:", pollAccounts);
 
       // Transform the data
@@ -182,11 +161,11 @@ export const useVotingProgram = () => {
         return {
           publicKey: item.publicKey,
           account: {
-            pollId: new BN(account.pollId?.toString() || account.poll_id?.toString() || '0'),
+            pollId: new BN(account.poll_id?.toString() || account.pollId?.toString() || '0'),
             description: account.description || '',
-            pollStartTime: new BN(account.pollStartTime?.toString() || account.poll_start_time?.toString() || '0'),
-            pollEndTime: new BN(account.pollEndTime?.toString() || account.poll_end_time?.toString() || '0'),
-            candidateAmount: account.candidateAmount || account.candidate_amount || 0
+            pollStartTime: new BN(account.poll_start_time?.toString() || account.pollStartTime?.toString() || '0'),
+            pollEndTime: new BN(account.poll_end_time?.toString() || account.pollEndTime?.toString() || '0'),
+            candidateAmount: account.candidate_amount || account.candidateAmount || 0
           }
         };
       });
@@ -211,7 +190,19 @@ export const useVotingProgram = () => {
 
     try {
       // Fetch all candidates
-      const allCandidates = await program.account.candidate.all();
+      console.log("Fetching all candidates...");
+      console.log('Available accounts:', Object.keys(program.account));
+      
+      // First check if the account name is capitalized (Candidate) or lowercase (candidate)
+      const candidateAccountName = Object.keys(program.account).find(
+        name => name.toLowerCase() === 'candidate'
+      );
+      
+      if (!candidateAccountName) {
+        throw new Error("Candidate account not found in program");
+      }
+      
+      const allCandidates = await program.account[candidateAccountName].all();
       console.log("Raw candidate accounts:", allCandidates);
 
       // Transform the candidates
@@ -220,8 +211,8 @@ export const useVotingProgram = () => {
         return {
           publicKey: item.publicKey,
           account: {
-            candidateName: account.candidateName || account.candidate_name || '',
-            candidateVotes: new BN(account.candidateVotes?.toString() || account.candidate_votes?.toString() || '0')
+            candidateName: account.candidate_name || account.candidateName || '',
+            candidateVotes: new BN(account.candidate_votes?.toString() || account.candidateVotes?.toString() || '0')
           }
         };
       });
@@ -237,16 +228,33 @@ export const useVotingProgram = () => {
     }
   };
 
-  // Create a new poll
-  const createPoll = async (description: string): Promise<boolean> => {
+  // Create a new poll with optional retry for seed constraint errors
+  const createPoll = async (description: string, retryCount = 0): Promise<boolean> => {
     if (!program || !wallet) return false;
+    // Limit retries to avoid infinite loops
+    if (retryCount > 3) {
+      setStatus({
+        message: 'Failed to create poll after multiple attempts. Please try again later.',
+        isError: true
+      });
+      return false;
+    }
 
     setLoading(true);
     setStatus(null);
 
     try {
-      // Generate a unique poll ID using current timestamp
-      const pollId = new BN(Date.now());
+      // Generate a unique poll ID using current timestamp + random suffix to avoid collisions
+      const timestamp = Date.now().toString();
+      // Add a small random number to ensure uniqueness, especially on retries
+      const randomSuffix = retryCount > 0 ? Math.floor(Math.random() * 1000) : 0;
+      const pollIdStr = timestamp + randomSuffix;
+      console.log(`Using poll ID (attempt ${retryCount + 1}):`, pollIdStr);
+      const pollId = new BN(pollIdStr);
+      
+      // Log the BN value and its buffer representation to debug seed issues
+      console.log("Poll ID as BN:", pollId.toString());
+      console.log("Poll ID as Buffer:", pollId.toArrayLike(Buffer, 'le', 8).toString('hex'));
 
       // Set poll duration - from now to 7 days in the future
       const now = Math.floor(Date.now() / 1000);
@@ -263,21 +271,43 @@ export const useVotingProgram = () => {
         endTime: oneWeekFromNow
       });
 
-      // Log available methods to debug
-      console.log("Available methods:", Object.keys(program.methods));
-
-      // Try to find the correct method name
-      const methodName = Object.keys(program.methods).find(
-        name => name.toLowerCase() === 'initialize_poll' || name === 'initializePoll'
+      // Check available method names
+      const availableMethods = Object.keys(program.methods);
+      console.log("Available methods:", availableMethods);
+      
+      // Determine the correct method name (snake_case or camelCase)
+      const methodName = availableMethods.find(
+        name => name === 'initialize_poll' || name === 'initializePoll'
       );
-
+      
       if (!methodName) {
-        throw new Error('initialize_poll method not found in program');
+        throw new Error("Initialize poll method not found in program");
       }
+      
+      console.log(`Using method: ${methodName}`);
 
-      console.log("Using method name:", methodName);
-
-      // Use the found method name
+      // First, simulate the transaction to get detailed error information
+      try {
+        const simulation = await program.methods[methodName](
+          pollId,
+          description,
+          new BN(now),
+          new BN(oneWeekFromNow)
+        )
+          .accounts({
+            signer: wallet.publicKey,
+            poll: pollPDA,
+            system_program: SystemProgram.programId,
+          })
+          .simulate();
+        
+        console.log("Simulation successful:", simulation);
+      } catch (simErr) {
+        console.error("Simulation error:", simErr);
+        // Log but continue to try the actual transaction
+      }
+      
+      // Use the correct method name for the actual transaction
       const tx = await program.methods[methodName](
         pollId,
         description,
@@ -289,7 +319,11 @@ export const useVotingProgram = () => {
           poll: pollPDA,
           system_program: SystemProgram.programId,
         })
-        .rpc({ skipPreflight: true })
+        .rpc({ 
+          skipPreflight: true,
+          commitment: 'processed',
+          maxRetries: 5,
+        })
         .catch(err => {
           console.error("Detailed error:", err);
           if (err.logs) {
@@ -307,12 +341,51 @@ export const useVotingProgram = () => {
       return true;
     } catch (err) {
       console.error('Error creating poll:', err);
-
+      
+      // Log more details about the error to assist with debugging
+      if (err instanceof Error) {
+        console.error('Error message:', err.message);
+        console.error('Error stack:', err.stack);
+      }
+      
       if (err.toString().includes('429')) {
         setStatus({
           message: 'Network is busy. Please try again in a few moments.',
           isError: true
         });
+      } else if (err.toString().includes('Not found')) {
+        setStatus({
+          message: 'Method not found in program. Check IDL structure and method name.',
+          isError: true
+        });
+      } else if (err.toString().includes('seed constraint was violated') || err.toString().includes('seeds constraint')) {
+        // Handle seed constraint violations - this happens when a poll with the same ID already exists
+        console.error("Seed constraint violation - poll ID already exists");
+        
+        // Automatically retry with a different poll ID
+        console.log(`Retrying with a new poll ID (attempt ${retryCount + 1})`);
+        setLoading(false);
+        return createPoll(description, retryCount + 1);
+        
+      } else if (err.toString().includes('TransactionExpiredTimeoutError')) {
+        // For local validator, the transaction might still have succeeded despite the timeout
+        setStatus({
+          message: 'Transaction timed out but may have succeeded. Check "fetchPolls" to verify, or try again.',
+          isError: true
+        });
+        
+        // Try to fetch polls to see if the operation succeeded despite timeout
+        setTimeout(() => {
+          fetchPolls().then(polls => {
+            if (polls.length > 0) {
+              console.log("Found polls after timeout, transaction might have succeeded:", polls);
+              setStatus({
+                message: 'Poll may have been created successfully despite timeout. See poll list.',
+                isError: false
+              });
+            }
+          });
+        }, 3000);
       } else {
         setStatus({
           message: `Failed to create poll: ${err}`,
@@ -345,12 +418,25 @@ export const useVotingProgram = () => {
         candidateName
       });
 
-      // Use snake_case method name
-      const tx = await program.methods
-        .initialize_candidate(
-          pollId,
-          candidateName
-        )
+      // Check available method names
+      const availableMethods = Object.keys(program.methods);
+      
+      // Determine the correct method name (snake_case or camelCase)
+      const methodName = availableMethods.find(
+        name => name === 'initialize_candidate' || name === 'initializeCandidate'
+      );
+      
+      if (!methodName) {
+        throw new Error("Initialize candidate method not found in program");
+      }
+      
+      console.log(`Using method: ${methodName}`);
+
+      // Use the correct method name
+      const tx = await program.methods[methodName](
+        pollId,
+        candidateName
+      )
         .accounts({
           signer: wallet.publicKey,
           poll: pollPDA,
@@ -408,12 +494,11 @@ export const useVotingProgram = () => {
         candidateName
       });
 
-      // Call the vote instruction with snake_case field names
-      const tx = await program.methods
-        .vote(
-          pollId,
-          candidateName
-        )
+      // Use the vote method (should be the same in both snake_case and camelCase)
+      const tx = await program.methods.vote(
+        pollId,
+        candidateName
+      )
         .accounts({
           signer: wallet.publicKey,
           poll: pollPDA,

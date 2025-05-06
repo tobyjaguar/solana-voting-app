@@ -5,6 +5,7 @@ import { PollAccount, CandidateAccount } from '@/app/models/types';
 import AddCandidateForm from './AddCandidateForm';
 import CandidateList from './CandidateList';
 import useVotingProgram from '@/app/hooks/useVotingProgram';
+import { BN } from '@project-serum/anchor';
 
 interface PollCardProps {
   poll: PollAccount;
@@ -40,21 +41,38 @@ const PollCard = ({ poll, onRefresh }: PollCardProps) => {
   };
   
   return (
-    <div className={`bg-slate-800 p-4 rounded-lg ${isActive ? 'border-l-4 border-green-500' : 'border-l-4 border-red-500 opacity-80'}`}>
-      <h3 className="text-xl font-bold mb-2">{poll.account.description}</h3>
+    <div style={{
+      backgroundColor: '#1e293b',
+      padding: '24px', 
+      borderRadius: '8px',
+      boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+      borderLeft: `4px solid ${isActive ? '#22c55e' : '#ef4444'}`,
+      opacity: isActive ? 1 : 0.8
+    }}>
+      <h3 style={{fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '12px'}}>{poll.account.description}</h3>
       
-      <div className="text-sm text-slate-400 mb-4">
-        <p>Status: {isActive ? 'Active' : 'Inactive'}</p>
+      <div style={{fontSize: '0.875rem', color: '#94a3b8', marginBottom: '20px'}}>
+        <p style={{marginBottom: '4px'}}>Status: <span style={{color: isActive ? '#4ade80' : '#f87171'}}>
+          {isActive ? 'Active' : 'Inactive'}
+        </span></p>
         <p>
           Period: {formatDate(poll.account.pollStartTime)} to {formatDate(poll.account.pollEndTime)}
         </p>
       </div>
       
       {isActive && (
-        <div className="mb-4">
+        <div style={{marginBottom: '16px'}}>
           <button
             onClick={() => setShowAddForm(!showAddForm)}
-            className="bg-blue-600 hover:bg-blue-700 text-white py-1.5 px-3 rounded-lg text-sm"
+            style={{
+              backgroundColor: '#2563eb',
+              color: 'white',
+              padding: '6px 12px',
+              borderRadius: '8px',
+              fontSize: '0.875rem',
+              cursor: 'pointer',
+              border: 'none'
+            }}
           >
             {showAddForm ? 'Cancel' : 'Add Project Option'}
           </button>
