@@ -50,7 +50,15 @@ const CandidateList = ({ pollId, candidates, isActive, onVoted }: CandidateListP
               <button
                 onClick={() => handleVote(candidate.account.candidateName)}
                 disabled={loading || votingFor !== null}
-                className="bg-green-600 hover:bg-green-700 text-white py-1 px-3 rounded-lg text-sm disabled:opacity-50"
+                style={{
+                  backgroundColor: '#2563eb',
+                  color: 'white',
+                  padding: '6px 12px',
+                  borderRadius: '8px',
+                  fontSize: '0.875rem',
+                  cursor: 'pointer',
+                  border: 'none'
+                }}
               >
                 {votingFor === candidate.account.candidateName ? 'Voting...' : 'Vote'}
               </button>

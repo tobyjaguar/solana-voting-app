@@ -23,6 +23,15 @@ const PollCard = ({ poll, onRefresh }: PollCardProps) => {
   const now = Math.floor(Date.now() / 1000);
   const isActive = poll.account.pollStartTime.lte(new BN(now)) && 
                    poll.account.pollEndTime.gte(new BN(now));
+                   
+  // Add debug logging for poll timing
+  useEffect(() => {
+    console.log(`Poll: ${poll.account.description}`);
+    console.log(`Current time: ${now}`);
+    console.log(`Start time: ${poll.account.pollStartTime.toString()}`);
+    console.log(`End time: ${poll.account.pollEndTime.toString()}`);
+    console.log(`Is active: ${isActive}`);
+  }, [poll]);
   
   // Load candidates for this poll
   const loadCandidates = async () => {

@@ -19,6 +19,17 @@ body {
   background: var(--background-color);
 }
 
+/* Make sure all headings are visible */
+h1, h2, h3, h4, h5, h6 {
+  color: white;
+}
+
+/* Special class for the Active Polls heading */
+.heading-visible {
+  color: white !important;
+  font-weight: 600;
+}
+
 .wallet-adapter-button {
   background-color: var(--solana-purple) !important;
 }

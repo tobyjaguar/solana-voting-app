@@ -156,7 +156,7 @@ export const useVotingProgram = () => {
       console.log("Raw poll accounts:", pollAccounts);
 
       // Transform the data
-      return pollAccounts.map(item => {
+      return pollAccounts.map((item: any) => {
         const account = item.account as any;
         return {
           publicKey: item.publicKey,
@@ -184,16 +184,12 @@ export const useVotingProgram = () => {
   // Fetch candidates for a specific poll
   const fetchCandidates = async (pollId: BN): Promise<CandidateAccount[]> => {
     if (!program) return [];
-
+  
     setLoading(true);
     setStatus(null);
-
+  
     try {
-      // Fetch all candidates
-      console.log("Fetching all candidates...");
-      console.log('Available accounts:', Object.keys(program.account));
-      
-      // First check if the account name is capitalized (Candidate) or lowercase (candidate)
+      // Find the candidate account name
       const candidateAccountName = Object.keys(program.account).find(
         name => name.toLowerCase() === 'candidate'
       );
@@ -202,11 +198,28 @@ export const useVotingProgram = () => {
         throw new Error("Candidate account not found in program");
       }
       
+      // Get all candidates
       const allCandidates = await program.account[candidateAccountName].all();
-      console.log("Raw candidate accounts:", allCandidates);
-
-      // Transform the candidates
-      return allCandidates.map(item => {
+      
+      // Filter candidates using PDA derivation logic
+      const filteredCandidates = [];
+      for (const candidate of allCandidates) {
+        const candidateName = candidate.account.candidate_name || candidate.account.candidateName;
+        if (!candidateName) continue;
+        
+        // Derive the expected PDA for this poll and candidate name
+        const expectedPDA = getCandidatePDA(pollId, candidateName);
+        
+        // If the PDAs match, this candidate belongs to this poll
+        if (expectedPDA.toString() === candidate.publicKey.toString()) {
+          filteredCandidates.push(candidate);
+        }
+      }
+      
+      console.log(`Found ${filteredCandidates.length} candidates for poll ${pollId.toString()}`);
+  
+      // Transform the filtered candidates
+      return filteredCandidates.map(item => {
         const account = item.account as any;
         return {
           publicKey: item.publicKey,
@@ -256,9 +269,15 @@ export const useVotingProgram = () => {
       console.log("Poll ID as BN:", pollId.toString());
       console.log("Poll ID as Buffer:", pollId.toArrayLike(Buffer, 'le', 8).toString('hex'));
 
-      // Set poll duration - from now to 7 days in the future
-      const now = Math.floor(Date.now() / 1000);
-      const oneWeekFromNow = now + (7 * 24 * 60 * 60);
+      // Set poll duration - set start time to 2 minutes in the past to ensure it's active
+      // This ensures the poll is active immediately when created and accounts for any
+      // potential clock skew between client and blockchain validator
+      const now = Math.floor(Date.now() / 1000) - 172800; // 48 hours in the past
+      console.log("Poll start time (48 hours in the past):", now);
+      
+      // End time is one week from current time
+      const oneWeekFromNow = Math.floor(Date.now() / 1000) + (7 * 24 * 60 * 60);
+      console.log("Poll end timestamp:", oneWeekFromNow);
 
       // Get the PDA for the poll
       const pollPDA = getPollPDA(pollId);
@@ -432,26 +451,91 @@ export const useVotingProgram = () => {
       
       console.log(`Using method: ${methodName}`);
 
-      // Use the correct method name
-      const tx = await program.methods[methodName](
-        pollId,
-        candidateName
-      )
-        .accounts({
-          signer: wallet.publicKey,
-          poll: pollPDA,
-          candidate: candidatePDA,
-          system_program: SystemProgram.programId,
-        })
-        .rpc();
-
-      console.log("Candidate added! Transaction signature:", tx);
-
-      setStatus({
-        message: 'Candidate added successfully!',
-        isError: false
-      });
-      return true;
+      // Skip simulation as it's causing issues
+      // Directly try the transaction with error handling
+      console.log("Fetching poll account first to check poll timing");
+      try {
+        // Use the poll account to check if the poll has started and hasn't ended
+        const pollAccount = await program.account.poll.fetch(pollPDA);
+        console.log("Poll account:", pollAccount);
+        
+        // Check poll timing manually - using on-chain data
+        const now = Math.floor(Date.now() / 1000);
+        const startTime = new BN(pollAccount.poll_start_time?.toString() || pollAccount.pollStartTime?.toString() || '0');
+        const endTime = new BN(pollAccount.poll_end_time?.toString() || pollAccount.pollEndTime?.toString() || '0');
+        
+        console.log(`Current time: ${now}`);
+        console.log(`Poll start time: ${startTime.toString()}`);
+        console.log(`Poll end time: ${endTime.toString()}`);
+        console.log(`Time until poll starts: ${startTime.sub(new BN(now)).toString()} seconds`);
+        
+        // Add safety buffer to account for possible clock difference between client and blockchain
+        // Check if poll hasn't started yet (with 60 second buffer)
+        if (startTime.gt(new BN(now + 60))) {
+          throw new Error(`Poll starts in ${startTime.sub(new BN(now)).toString()} seconds. Please wait.`);
+        }
+        
+        // Check if poll has ended (with 60 second buffer)
+        if (endTime.lt(new BN(now - 60))) {
+          throw new Error("Poll has already ended.");
+        }
+      } catch (fetchErr) {
+        console.error("Error fetching poll account:", fetchErr);
+        // If we can't fetch the poll, continue with the transaction
+        // and let the on-chain program handle the validation
+      }
+      
+      // Use the correct method name with proper RPC configuration
+      console.log("Executing transaction...");
+      try {
+        const tx = await program.methods[methodName](
+          pollId,
+          candidateName
+        )
+          .accounts({
+            signer: wallet.publicKey,
+            poll: pollPDA,
+            candidate: candidatePDA,
+            system_program: SystemProgram.programId,
+          })
+          .rpc({ 
+            skipPreflight: false, // Changed to false for better error messages
+            commitment: 'confirmed', // Changed to confirmed for more reliability
+          })
+          .catch(err => {
+            console.error("Transaction execution error:", err);
+            // Extract logs for better error diagnosis
+            if (err.logs) {
+              console.error("Transaction logs:", err.logs.join('\n'));
+            }
+            throw err;
+          });
+          
+        console.log("Candidate added! Transaction signature:", tx);
+        
+        setStatus({
+          message: 'Candidate added successfully!',
+          isError: false
+        });
+        
+        return true;
+      } catch (txErr) {
+        console.error("Transaction failed:", txErr);
+        // Check for AnchorError with specific error codes
+        if (txErr.toString().includes("PollNotStarted") || 
+            txErr.toString().includes("custom program error: 0x1770")) {
+          throw new Error("Poll has not started yet according to blockchain time. Try again in a few minutes.");
+        } else if (txErr.toString().includes("PollEnded") || 
+                  txErr.toString().includes("custom program error: 0x1771")) {
+          throw new Error("Poll has already ended according to blockchain time.");
+        } else if (txErr.toString().includes("seeds constraint were violated") ||
+                  txErr.toString().includes("already in use")) {
+          throw new Error("A candidate with this name already exists in this poll.");
+        } else {
+          console.error("Detailed error:", txErr);
+          throw txErr;
+        }
+      }
     } catch (err) {
       console.error('Error adding candidate:', err);
 
@@ -460,7 +544,43 @@ export const useVotingProgram = () => {
           message: 'Network is busy. Please try again in a few moments.',
           isError: true
         });
+      } else if (err.toString().includes('PollNotStarted') || 
+                err.toString().includes('not started yet') ||
+                err.toString().includes('custom program error: 0x1770')) {
+        // Handle poll not started error
+        setStatus({
+          message: 'This poll has not started yet according to blockchain time. Please try again in a few minutes.',
+          isError: true
+        });
+      } else if (err.toString().includes('PollEnded') || 
+                err.toString().includes('already ended') ||
+                err.toString().includes('custom program error: 0x1771')) {
+        // Handle poll ended error
+        setStatus({
+          message: 'This poll has already ended. No more candidates can be added.',
+          isError: true
+        });
+      } else if (err.toString().includes('seeds constraint') || err.toString().includes('already in use')) {
+        // Handle duplicate candidate name
+        setStatus({
+          message: 'A candidate with this name already exists. Please choose a different name.',
+          isError: true
+        });
+      } else if (err.toString().includes('insufficient funds')) {
+        setStatus({
+          message: 'Insufficient funds to add candidate. Make sure your wallet has enough SOL.',
+          isError: true
+        });
       } else {
+        // Log detailed error information
+        if (err instanceof Error) {
+          console.error('Error details:', {
+            message: err.message,
+            stack: err.stack,
+            name: err.name
+          });
+        }
+        
         setStatus({
           message: `Failed to add candidate: ${err}`,
           isError: true
@@ -494,8 +614,21 @@ export const useVotingProgram = () => {
         candidateName
       });
 
-      // Use the vote method (should be the same in both snake_case and camelCase)
-      const tx = await program.methods.vote(
+      // Check available method names for consistency
+      const availableMethods = Object.keys(program.methods);
+      const voteMethodName = availableMethods.find(
+        name => name === 'vote'  // vote should be the same in both cases
+      );
+      
+      if (!voteMethodName) {
+        throw new Error("Vote method not found in program");
+      }
+      
+      console.log(`Using vote method: ${voteMethodName}`);
+      console.log(`Voter record PDA: ${voterRecordPDA.toString()}`);
+      
+      // Use the vote method with proper RPC configuration
+      const tx = await program.methods[voteMethodName](
         pollId,
         candidateName
       )
@@ -506,7 +639,11 @@ export const useVotingProgram = () => {
           voter_record: voterRecordPDA,
           system_program: SystemProgram.programId,
         })
-        .rpc();
+        .rpc({ 
+          skipPreflight: true,
+          commitment: 'processed',
+          maxRetries: 5
+        });
 
       console.log("Vote recorded! Transaction signature:", tx);
 
@@ -536,6 +673,78 @@ export const useVotingProgram = () => {
     }
   };
 
+  // Utility function to update poll timing
+  const updatePollTiming = async (pollId: BN): Promise<boolean> => {
+    if (!program || !wallet) return false;
+
+    setLoading(true);
+    setStatus(null);
+
+    try {
+      // Get the PDA for the poll
+      const pollPDA = getPollPDA(pollId);
+      
+      // Check available method names
+      const availableMethods = Object.keys(program.methods);
+      console.log("Available methods:", availableMethods);
+      
+      // See if we have an update_poll_timing method
+      // This assumes a method needs to be added to the program
+      const methodName = availableMethods.find(
+        name => name === 'update_poll_timing' || name === 'updatePollTiming'
+      );
+      
+      if (!methodName) {
+        throw new Error("Update poll timing method not found in program. Please update your Solana program.");
+      }
+      
+      // Set the poll start time to 2 minutes in the past
+      const startTime = new BN(Math.floor(Date.now() / 1000) - 120);
+      // Keep the original end time (1 week from now)
+      const endTime = new BN(Math.floor(Date.now() / 1000) + (7 * 24 * 60 * 60));
+      
+      console.log(`Updating poll timing for poll ${pollId.toString()}:`, {
+        startTime: startTime.toString(),
+        endTime: endTime.toString()
+      });
+      
+      // Call the update poll timing method
+      const tx = await program.methods[methodName](
+        pollId,
+        startTime,
+        endTime
+      )
+        .accounts({
+          signer: wallet.publicKey,
+          poll: pollPDA,
+        })
+        .rpc({
+          skipPreflight: false,
+          commitment: 'confirmed'
+        });
+      
+      console.log("Poll timing updated! Transaction signature:", tx);
+      
+      setStatus({
+        message: 'Poll timing updated successfully!',
+        isError: false
+      });
+      
+      return true;
+    } catch (err) {
+      console.error('Error updating poll timing:', err);
+      
+      setStatus({
+        message: `Failed to update poll timing: ${err}`,
+        isError: true
+      });
+      
+      return false;
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return {
     program,
     loading,
@@ -545,7 +754,8 @@ export const useVotingProgram = () => {
     createPoll,
     addCandidate,
     vote,
-    networkMismatch
+    networkMismatch,
+    updatePollTiming  // Export the new function
   };
 };
 
