@@ -1,6 +1,6 @@
 import { PublicKey } from '@solana/web3.js';
 
-// Your program ID from Anchor.toml or target/idl
+// Program ID from Anchor.toml or target/idl
 export const PROGRAM_ID = new PublicKey('C82ywxcsy6SahTq2CvdnGsN4xN1aKeWan7VR3mDQgi8V');
 
 // Network configuration

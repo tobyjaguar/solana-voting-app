@@ -9,7 +9,7 @@ import { PROGRAM_ID, NETWORK, ENDPOINT } from '@/app/utils/constants';
 import { getPollPDA, getCandidatePDA, getVoterRecordPDA } from '@/app/utils/pdas';
 
 // Import the IDL directly
-import idlFile from '../../target/idl/solana_voting_app.json';
+import idlFile from '../idl/solana_voting_app.json';
 
 export const useVotingProgram = () => {
   const { connection } = useConnection();

@@ -1,9 +1,11 @@
 /* Import the preflight styles */
-@import "@tailwindcss/postcss/preflight.css";
+/* @import "@tailwindcss/postcss/preflight.css"; */
 
 /* Import the components and utilities */
-@import "@tailwindcss/postcss/components.css";
-@import "@tailwindcss/postcss/utilities.css";
+/* @import "@tailwindcss/postcss/components.css"; */
+/* @import "@tailwindcss/postcss/utilities.css"; */
+
+@import 'tailwindcss';
 
 :root {
   --solana-purple: #9945FF;

@@ -1,6 +1,6 @@
 import * as anchor from "@coral-xyz/anchor";
 import { Program } from "@coral-xyz/anchor";
-import { SolanaVotingApp } from "../target/types/solana_voting_app";
+import { SolanaVotingApp } from "../app/types/solana_voting_app";
 import { expect } from "chai";
 import { BN } from "bn.js";
 
