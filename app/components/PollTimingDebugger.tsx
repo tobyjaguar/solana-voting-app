@@ -59,7 +59,16 @@ const PollTimingDebugger = ({ program, pollId, getPollPDA }: PollTimingDebuggerP
       console.log("Checking timing for poll:", pollPDA.toString());
       
       // Fetch the poll account
-      const pollAccount = await program.account.poll.fetch(pollPDA);
+      // Find the proper account name (could be Poll or poll)
+      const pollAccountName = Object.keys(program.account).find(
+        name => name.toLowerCase() === 'poll'
+      );
+      
+      if (!pollAccountName) {
+        throw new Error("Poll account not found in program");
+      }
+      
+      const pollAccount = await program.account[pollAccountName].fetch(pollPDA);
       
       // Safely extract values with null checks
       const startTime = pollAccount.poll_start_time || pollAccount.pollStartTime;

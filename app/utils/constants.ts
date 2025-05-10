@@ -4,9 +4,20 @@ import { PublicKey } from '@solana/web3.js';
 export const PROGRAM_ID = new PublicKey('C82ywxcsy6SahTq2CvdnGsN4xN1aKeWan7VR3mDQgi8V');
 
 // Network configuration
-export const NETWORK = 'devent'; // 'devnet' or 'testnet' or 'localnet'
-export const ENDPOINT = 'https://api.devnet.solana.com';
-// export const ENDPOINT = 'http://localhost:8899'; // Local Solana cluster
+export type NetworkType = 'localnet' | 'devnet' | 'testnet' | 'mainnet-beta';
+
+// Set the current network
+export const NETWORK: NetworkType = 'devnet';
+
+// Network endpoints
+const ENDPOINTS: Record<NetworkType, string> = {
+  localnet: 'http://localhost:8899',
+  devnet: 'https://api.devnet.solana.com',
+  testnet: 'https://api.testnet.solana.com',
+  'mainnet-beta': 'https://api.mainnet-beta.solana.com'
+};
+
+export const ENDPOINT = ENDPOINTS[NETWORK] || ENDPOINTS.devnet;
 
 // Validation constants
 export const MAX_DESCRIPTION_LENGTH = 280;

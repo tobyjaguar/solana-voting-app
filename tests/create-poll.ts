@@ -26,7 +26,7 @@ describe("solana-voting-app", () => {
     
     console.log('Creating poll with ID:', pollId.toString());
     console.log('Poll PDA:', pollPDA.toString());
-    
+
     // Create the poll
     await program.methods
       .initializePoll(
@@ -39,7 +39,7 @@ describe("solana-voting-app", () => {
         signer: provider.wallet.publicKey,
         poll: pollPDA,
         systemProgram: anchor.web3.SystemProgram.programId,
-      })
+      } as any)
       .rpc();
     
     // Fetch the created poll to verify

@@ -24,10 +24,23 @@ export const WalletContextProvider: FC<WalletContextProviderProps> = ({ children
     setMounted(true);
   }, []);
 
-  // Using devnet for development
-  const network = NETWORK === 'devnet' 
-    ? WalletAdapterNetwork.Devnet 
-    : WalletAdapterNetwork.Mainnet;
+  // Map the network from constants to WalletAdapterNetwork
+  const getWalletAdapterNetwork = () => {
+    switch (NETWORK) {
+      case 'devnet':
+        return WalletAdapterNetwork.Devnet;
+      case 'testnet':
+        return WalletAdapterNetwork.Testnet;
+      case 'mainnet-beta':
+        return WalletAdapterNetwork.Mainnet;
+      case 'localnet':
+        return WalletAdapterNetwork.Devnet; // Use Devnet for local development
+      default:
+        return WalletAdapterNetwork.Devnet;
+    }
+  };
+  
+  const network = getWalletAdapterNetwork();
     
   // Use your custom endpoint or fall back to the default
   const endpoint = useMemo(() => ENDPOINT || clusterApiUrl(network), [network]);

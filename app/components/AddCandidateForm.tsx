@@ -44,7 +44,10 @@ const AddCandidateForm = ({ pollId, onCandidateAdded }: AddCandidateFormProps) =
             id="candidateName"
             type="text"
             value={candidateName}
-            onChange={(e) => setCandidateName(e.target.value)}
+            onChange={(e) => {
+              const target = e.target as HTMLInputElement;
+              setCandidateName(target.value);
+            }}
             className="w-full p-2 bg-slate-700 rounded border border-slate-600"
             placeholder="e.g., Solana DAO, Beer Token"
             maxLength={MAX_CANDIDATE_NAME_LENGTH}

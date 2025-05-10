@@ -42,7 +42,7 @@ describe("solanaVotingApp", () => {
           signer: wallet.publicKey,
           poll: pollPda,
           systemProgram: anchor.web3.SystemProgram.programId,
-        })
+        } as any)
         .rpc();
       console.log("Poll initialized successfully");
     } catch (e) {
@@ -77,7 +77,7 @@ describe("solanaVotingApp", () => {
         poll: pollPda,
         candidate: candidatePda,
         systemProgram: anchor.web3.SystemProgram.programId,
-      })
+      } as any)
       .rpc();
 
     // Fetch the candidate account
@@ -97,7 +97,7 @@ describe("solanaVotingApp", () => {
         signer: wallet.publicKey,
         poll: pollPda,
         candidate: candidatePda,
-      })
+      } as any)
       .rpc();
 
     // Fetch the candidate account again

@@ -50,16 +50,37 @@ export const useVotingProgram = () => {
           console.error("Network connection error:", err);
           setNetworkMismatch(true);
           
-          if (NETWORK === 'localnet') {
-            setStatus({
-              message: `Connection to ${NETWORK} failed. Make sure your local Solana validator is running with "solana-test-validator".`,
-              isError: true
-            });
-          } else {
-            setStatus({
-              message: `Connection to ${NETWORK} failed. Please check your wallet and network settings.`,
-              isError: true
-            });
+          // Type-safe network error messages based on network type
+          switch (NETWORK) {
+            case 'localnet':
+              setStatus({
+                message: `Connection to localnet failed. Make sure your local Solana validator is running with "solana-test-validator".`,
+                isError: true
+              });
+              break;
+            case 'devnet':
+              setStatus({
+                message: `Connection to devnet failed. The Solana devnet may be experiencing issues or your wallet is not configured for devnet.`,
+                isError: true
+              });
+              break;
+            case 'testnet':
+              setStatus({
+                message: `Connection to testnet failed. The Solana testnet may be experiencing issues or your wallet is not configured for testnet.`,
+                isError: true
+              });
+              break;
+            case 'mainnet-beta':
+              setStatus({
+                message: `Connection to mainnet-beta failed. Please check your wallet and network settings.`,
+                isError: true
+              });
+              break;
+            default:
+              setStatus({
+                message: `Connection to ${NETWORK} failed. Please check your wallet and network settings.`,
+                isError: true
+              });
           }
         }
       } catch (err) {
@@ -457,8 +478,17 @@ export const useVotingProgram = () => {
       // Directly try the transaction with error handling
       console.log("Fetching poll account first to check poll timing");
       try {
+        // Find the proper account name (could be Poll or poll)
+        const pollAccountName = Object.keys(program.account).find(
+          name => name.toLowerCase() === 'poll'
+        );
+        
+        if (!pollAccountName) {
+          throw new Error("Poll account not found in program");
+        }
+        
         // Use the poll account to check if the poll has started and hasn't ended
-        const pollAccount = await program.account.poll.fetch(pollPDA);
+        const pollAccount = await program.account[pollAccountName].fetch(pollPDA);
         console.log("Poll account:", pollAccount);
         
         // Check poll timing manually - using on-chain data
