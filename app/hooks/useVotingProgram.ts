@@ -272,8 +272,10 @@ export const useVotingProgram = () => {
       // Set poll duration - set start time to 2 minutes in the past to ensure it's active
       // This ensures the poll is active immediately when created and accounts for any
       // potential clock skew between client and blockchain validator
-      const now = Math.floor(Date.now() / 1000) - 172800; // 48 hours in the past
-      console.log("Poll start time (48 hours in the past):", now);
+      // const now = Math.floor(Date.now() / 1000) - 172800; // 48 hours in the past
+      // console.log("Poll start time (48 hours in the past):", now);
+      const now = Math.floor(Date.now() / 1000) - 3600; // try to create the poll 1 hour in the past
+      console.log("Poll start time (1 hour in the past):", now);
       
       // End time is one week from current time
       const oneWeekFromNow = Math.floor(Date.now() / 1000) + (7 * 24 * 60 * 60);
